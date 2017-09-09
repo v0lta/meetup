@@ -1,8 +1,0 @@
-\beamer@endinputifotherversion {3.24pt}
-\select@language {english}
-\beamer@sectionintoc {1}{Introduction}{3}{0}{1}
-\beamer@sectionintoc {2}{Methodology}{8}{0}{2}
-\beamer@sectionintoc {3}{Implementation}{10}{0}{3}
-\beamer@sectionintoc {4}{Results}{15}{0}{4}
-\beamer@sectionintoc {5}{Conclusion}{23}{0}{5}
-\beamer@sectionintoc {6}{Questions}{26}{0}{6}
