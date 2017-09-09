@@ -1,0 +1,32 @@
+% This file was created by matplotlib2tikz v0.5.7.
+% The lastest updates can be retrieved from
+% 
+% https://github.com/nschloe/matplotlib2tikz
+% 
+% where you can also submit bug reports and leavecomments.
+% 
+\documentclass[tikz]{standalone}
+\usepackage[utf8]{inputenc}
+\usepackage{fontspec}
+\usepackage{pgfplots}
+\begin{document}
+\begin{tikzpicture}
+
+
+\begin{axis}[
+%height = 30cm,
+%width = 35cm,
+xmin=30, xmax=44.5,
+ymin=100, ymax=150.0,
+y dir=reverse,
+axis on top,
+xtick={0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44},
+xticklabels={<sos>,sil,hh,ih,f,sil,k,er,r,ow,ow,sil,sil,t,ah,m,aa,hh,hh,ae,v,er,r,r,n,n,sil,f,er,er,m,iy,iy,iy,iy,iy,iy,iy,iy,sil,sil,t,uw,sil,<eos>},
+point meta min=0,
+point meta max=0.904238343238831
+]
+\addplot graphics [includegraphics cmd=\pgfimage,xmin=-0.5, xmax=44.5, ymin=153.5, ymax=-0.5] {alpha.png};
+\end{axis}
+
+\end{tikzpicture}
+\end{document}

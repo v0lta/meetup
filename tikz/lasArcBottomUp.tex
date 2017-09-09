@@ -1,0 +1,202 @@
+\documentclass{standalone}
+\usepackage{tikz}
+\usetikzlibrary{positioning,arrows,calc}
+\begin{document}
+\pagestyle{empty}
+
+\def\layersep{2.0cm}
+
+\begin{tikzpicture}[shorten >=1pt,->,draw=black!50, node distance=\layersep,transform shape,rotate=90]  %<-- rotate the NN
+  \tikzstyle{every pin edge}=[<-,shorten <=1pt]
+  \tikzstyle{neuron}=[circle,fill=black!25,minimum size=17pt,inner sep=0pt]
+	\tikzstyle{attent neuron}=[neuron, fill=green!50];
+	\tikzstyle{rcNeuron}=[rectangle,fill=black!25,minimum size=17pt,inner sep=0pt]
+	\tikzstyle{BLSTM rcNeuron}=[rcNeuron, fill=red!50];
+	\tikzstyle{LSTM rcNeuron}=[rcNeuron, fill=blue!50];
+
+
+    \tikzstyle{annot} = [text width=4em, text centered]
+    \tikzset{hoz/.style={rotate=-90}}   %<--- for labels
+    % Draw the input layer nodes
+    \foreach \pos [count=\name] in {0,...,7,9} {
+        \ifnum \pos=9  %create the x_T input.
+          \node[BLSTM rcNeuron, pin=left:
+            \rotatebox{-90}{\parbox[t][][r]{8mm}{\centering $\mathbf{x}_{T}$}}]
+            (I-\name) at (0,-\pos) {};
+        \else
+          \node[BLSTM rcNeuron, pin=left:
+            \rotatebox{-90}{\parbox[t][][r]{8mm}{\centering $\mathbf{x}_{\name}$}}]
+            (I-\name) at (0,-\pos) {};
+        \fi
+      }
+    % Draw the hidden layer nodes
+    \foreach \pos [count=\name] in {0.5,2.5,4.5,6.5,8.5}
+        \node[BLSTM rcNeuron] (H-\name) at (\layersep,-\pos cm) {};
+
+    % Draw the output layer nodes
+    \foreach \pos [count=\name] in {1.5,5.5,8} {
+      \node[BLSTM rcNeuron] (O-\name) at (\layersep*2,-\pos cm) {};
+      %\node[output rcNeuron, pin=right:
+      %  \rotatebox{-90}{\parbox[t][][r]{8mm}{\centering $h_{\name}$}}]
+      %  (O-\name) at (\layersep*2,-\pos cm) {};
+    }
+
+
+  	%draw the input layer recurrent connections.
+  	\foreach \startVal [count=\endVal] in {2,...,8} {
+       \draw[transform canvas={yshift=0.4ex},->] (I-\endVal) -- (I-\startVal);
+       \draw[transform canvas={yshift=-0.4ex},->] (I-\startVal) -- (I-\endVal);
+  	}
+    \draw[dashed, transform canvas={yshift=0.4ex},->] (I-8) -- (I-9);
+    \draw[dashed, transform canvas={yshift=-0.4ex},->] (I-9) -- (I-8);
+
+    %draw the hidden layer recurrent connections.
+    \foreach \startVal [count=\endVal] in {2,...,4} {
+    \draw[transform canvas={yshift=0.4ex},->] (H-\endVal) -- (H-\startVal);
+    \draw[transform canvas={yshift=-0.4ex},->] (H-\startVal) -- (H-\endVal);
+  	}
+    \draw[dashed, transform canvas={yshift=0.4ex},->] (H-4) -- (H-5);
+    \draw[dashed, transform canvas={yshift=-0.4ex},->] (H-5) -- (H-4);
+
+    %draw the output layer recurrent connections.
+    \draw[transform canvas={yshift=0.4ex},->] (O-1) -- (O-2);
+    \draw[transform canvas={yshift=-0.4ex},->] (O-2) -- (O-1);
+    \draw[dashed, transform canvas={yshift=0.4ex},->] (O-2) -- (O-3);
+    \draw[dashed, transform canvas={yshift=-0.4ex},->] (O-3) -- (O-2);
+
+    %Connect connect input and hidden layer.
+    %\foreach \source [evaluate=\source as \dest using {\source/2+0.5}]in {1,...,7} {
+    %  \draw[->] (H-\dest) -- (I-\source);
+    %}
+    \draw[->] (I-1) -- (H-1);
+    \draw[->] (I-2) -- (H-1);
+    \draw[->] (I-3) -- (H-2);
+    \draw[->] (I-4) -- (H-2);
+    \draw[->] (I-5) -- (H-3);
+    \draw[->] (I-6) -- (H-3);
+    \draw[->] (I-7) -- (H-4);
+    \draw[->] (I-8) -- (H-4);
+    \draw[->] (I-9) -- (H-5);
+
+    % Connect the hidden layer to the output layer
+    \draw[->] (H-1) -- (O-1);
+    \draw[->] (H-2) -- (O-1);
+    \draw[->] (H-3) -- (O-2);
+    \draw[->] (H-4) -- (O-2);
+    \draw[->] (H-5) -- (O-3);
+
+    % Annotate the layers
+    \node[annot,above of=H-1, node distance=1cm,hoz] (hl) {}; %Hidden layer
+    %\node[annot,left of=hl,hoz] {Input layer};
+    \node[annot,right of=hl,hoz] {Listener:};
+
+    % draw the listener output nodes
+    \node[right of=O-1, node distance=1.0cm, rotate=-90] (h1) {$\mathbf{h}_1$};
+    \draw[->] (O-1) -- (h1);
+    \node[right of=O-2, node distance=1.0cm, rotate=-90] (h2) {$\mathbf{h}_2$};
+    \draw[->] (O-2) -- (h2);
+    \node[right of=O-3, node distance=1.0cm, rotate=-90] (h3) {$\mathbf{h}_u$};
+    \draw[->] (O-3) -- (h3);
+
+    % draw the node for the h vector.
+    \node[below right of=h1, rotate=-90, node distance=1.5cm] (h)
+        {$\mathbf{H} = (\mathbf{h}_1, \mathbf{h}_2, \dots ,\mathbf{h}_u)$};
+    \draw[-] (h1) -- (h);
+    \draw[-] (h2) -- (h);
+    \draw[-] (h3) -- (h);
+
+    %draw the speller bottom layer.
+    \foreach \pos [count=\name] in {0,...,2,4} {
+        \ifnum \pos=4.5  %create the x_T input.
+          \node[LSTM rcNeuron, pin=left:
+            \rotatebox{-90}{\parbox[t][][r]{8mm}{\centering $\mathbf{y}_{s-1}$}}]
+            (SI-\name) at (\layersep*4,-\pos*2-0.5) {};
+        \else
+          \ifnum \pos=0
+            \node[LSTM rcNeuron, pin=left:
+              \rotatebox{-90}{\parbox[t][][r]{8mm}{\centering $<$sos$>$}}]
+              (SI-\name) at (\layersep*4,-\pos*2-0.5) {};
+
+          \else
+            \node[LSTM rcNeuron, pin=left:
+              \rotatebox{-90}{\parbox[t][][r]{8mm}{\centering $\mathbf{y}_{\name}$}}]
+              (SI-\name) at (\layersep*4,-\pos*2-0.5) {};
+          \fi
+        \fi
+      }
+
+      %draw the attent layer.
+      \foreach \pos [count=\name] in {0,1,2,4} {
+        \node[attent neuron]
+          (A-\name) at (\layersep*5,-\pos*2-0.5) {};
+      }
+
+      %draw the third speller layer.
+      \foreach \pos [count=\name] in {0,...,2,4} {
+        \node[LSTM rcNeuron]
+          (SH-\name) at (\layersep*6,-\pos*2-0.5) {};
+      }
+
+      %draw the speller output layer.
+      \foreach \pos [count=\name] in {0,...,2,4} {
+        \node[LSTM rcNeuron]
+          (SO-\name) at (\layersep*7,-\pos*2-0.5) {};
+      }
+
+      %draw the output distributions.
+      \node[right of=SO-1, node distance=1.0cm, rotate=-90] (y2) {$\mathbf{y}_2$};
+      \draw[->] (SO-1) -- (y2);
+      \node[right of=SO-2, node distance=1.0cm, rotate=-90] (y3) {$\mathbf{y}_3$};
+      \draw[->] (SO-2) -- (y3);
+      \node[right of=SO-3, node distance=1.0cm, rotate=-90] (y4) {$\mathbf{y}_4$};
+      \draw[->] (SO-3) -- (y4);
+      \node[right of=SO-4, node distance=1.0cm, rotate=-90] (eos) {$<$eos$>$};
+      \draw[->] (SO-4) -- (eos);
+
+      %draw the sideward speller connections.
+      \foreach \endVal [count=\startVal] in {2,...,3} {
+         \draw[->] (SH-\startVal) -- (SH-\endVal);
+         \draw[->] (SI-\startVal) -- (SI-\endVal);
+      }
+      \draw[dashed,->] (SI-3) -- (SI-4);
+      \draw[dashed,->] (SH-3) -- (SH-4);
+
+      %draw the forward hidden speller connections.
+      \foreach \val in {1,...,4} {
+         \draw[->] (SH-\val) -- (SO-\val);
+      }
+
+      %attend forward
+      \draw[->] (SI-1) -- (A-1);
+      \draw[->] (SI-2) -- (A-2);
+      \draw[->] (SI-3) -- (A-3);
+      \draw[->] (SI-4) -- (A-4);
+      \draw[->] (A-1) -- (SH-1);
+      \draw[->] (A-2) -- (SH-2);
+      \draw[->] (A-3) -- (SH-3);
+      \draw[->] (A-4) -- (SH-4);
+
+      %attend connections.
+      \draw[->, bend angle=10, bend left] (h) to (A-1) node[below right, rotate=-90] {$\mathbf{H}$};
+      \draw[->, bend angle=20, bend right] (h) to (A-2) node[below right, rotate=-90] {$\mathbf{H}$};
+      \draw[->, bend angle=25, bend right] (h) to (A-4) node[below left, rotate=-90] {$\mathbf{H}$};
+      \draw[->, bend angle=55, bend right] (h) to (A-3) node[below right, 	
+      rotate=-90] {$\mathbf{H}$};
+
+      %draw the c vector connections.
+      \draw[->, bend angle=45, bend left] (A-1) to ($(SI-2) + (0.3,0.25)$) node[above left, rotate=-90] {$\mathbf{c}_1$};
+      \draw[->, bend angle=45, bend left] (A-2) to ($(SI-3) + (0.3,0.25)$) node[above left, rotate=-90] {$\mathbf{c}_2$};
+      \draw[dashed, ->, bend angle=45, bend left] (A-3) to ($(SI-4) + (0.3,0.25)$) node[above left, rotate=-90] {};
+
+      \node[above right of=y2, node distance=1 cm, rotate=-90] {Speller:};
+      %\node[annot, below of=A-3, node distance=1.4 cm, hoz] {Attention-Context creates \\
+      %                                                        context vector $c_i$ from $h$ \\
+      %                                                        and $s_i$};
+      %\node[annot, below of=SO-4, node distance=1.4 cm, hoz] {Grapheme characters $y_i$ \\
+      %                                                       are modelled by the
+      %                                                       CharacterDistribution};
+;
+
+\end{tikzpicture}
+% End of code
+\end{document}
