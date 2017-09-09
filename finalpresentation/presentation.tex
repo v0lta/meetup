@@ -1,17 +1,7 @@
-\documentclass{beamer}
-%
-% Choose how your presentation looks.
-%
-% For more themes, color themes and font themes, see:
-% http://deic.uab.es/~iblanes/beamer_gallery/index_by_theme.html
-%
-\usetheme{Darmstadt}     % or try Darmstadt, Madrid, Warsaw, ...
-\usecolortheme{seahorse} % or try albatross, beaver, crane, ...
-\usefonttheme{default}   % or try serif, structurebold, ...
-\setbeamertemplate{navigation symbols}{}
-\setbeamertemplate{caption}[numbered]
-\usepackage{tikz}
-\usepackage{pgfplots}
+\documentclass[10pt]{beamer}
+
+\usetheme[progressbar=frametitle]{metropolis}
+\usepackage{appendixnumberbeamer}
 \usepackage{pgf}
 \usepackage{units}
 \usepackage{graphicx}
@@ -28,16 +18,6 @@
 
 \date{01.02.2017}
 
-\AtBeginSection[]{
-  \begin{frame}
-  \vfill
-  \centering
-  \begin{beamercolorbox}[sep=8pt,center,shadow=true,rounded=true]{title}
-    \usebeamerfont{title}\insertsectionhead\par%
-  \end{beamercolorbox}
-  \vfill
-  \end{frame}
-}
 
 \begin{document}
 \begin{frame}
@@ -64,7 +44,7 @@
 \begin{frame}{The LAS-Architecture}
 	\begin{figure}
 		\begin{tikzpicture}
-		    \node[anchor=south west,inner sep=0] at (0,0) {\includestandalone[height=6.5 cm]{../tikz/lasArcBottomUp}};
+		    \node[anchor=south west,inner sep=0] at (0,0) {\includegraphics[height=6.5 cm]{../tikz/lasArcBottomUp}};
 		    %\draw[red,ultra thick,rounded corners] (0.0,0.0) rectangle (5.0,2.5);
 		\end{tikzpicture}
 		\caption{Listener and speller.}
@@ -86,35 +66,6 @@ AttentionContext computations:
 	\label{eq:alphas}
 	\mathbf{c}_i = \sum\limits_{u} \alpha_{i,u} \mathbf{h}_u.
 \end{align}
-\end{frame}
-
-\begin{frame}{Long Short Term Memory}
-	\begin{figure}
-		\begin{tikzpicture}
-		    \node[anchor=south west,inner sep=0] at (0,0) {\includestandalone[height=6.5 cm]{../tikz/lstm}};
-		    %\draw[red,ultra thick,rounded corners] (0.0,0.0) rectangle (5.0,2.5);
-		\end{tikzpicture}
-		\caption{LSTM cell architecture visualization.}
-	\end{figure}
-\end{frame}
-
-
-\section{Methodology}
-\begin{frame}{Used methods}
-	\begin{itemize}
-		\item Object oriented programming, python.
-			\begin{itemize}
-				\item data encapsulation.
-				\item code structure and re-usability.
-			\end{itemize}
-		\item Code quality, pylint.
-			\begin{itemize}
-				\item if the python foundation' style guide is being followed.
-				\item looks for errors in the code.
-			\end{itemize}
-		\item Integrate into existing code.
-		\item Version control, git.
-	\end{itemize}
 \end{frame}
 
 \section{Implementation}
@@ -143,7 +94,7 @@ AttentionContext computations:
 
 \begin{frame}{Attend and spell cell layout}
 	\begin{figure}
-	\includestandalone[height=6.5 cm]{../tikz/asCellType1}
+	\includegraphics[height=6.5 cm]{../tikz/asCellType1}
 	\caption{Attend and spell cell flow chart.}
 	\end{figure}
 \end{frame}
@@ -159,7 +110,7 @@ AttentionContext computations:
 
 \begin{frame}{Dropout}
 	\begin{figure}
-		\includestandalone[height=6.5 cm]{../tikz/las_dropout}
+		\includegraphics[height=6.5 cm]{../tikz/las_dropout}
 		\caption{Input dropout - light red. Hidden dropout - dark red.}
 	\end{figure}
 \end{frame}
@@ -169,6 +120,7 @@ AttentionContext computations:
 \begin{frame}{Experimental settings}
 
 \begin{itemize}
+	\item TIMIT Speech corpus.
 	\item learning rate: 0.001.
 	\item batch\_size: 16 utterances, Training set total 3696.
 	\item validation set size: 4 utterances.
@@ -176,14 +128,6 @@ AttentionContext computations:
 	\item validation every 20 weight updates.
 \end{itemize}
 
-\end{frame}
-
-\begin{frame}{The Listener with CTC}
-	\begin{figure}
-		\includegraphics[width=0.49\textwidth]{../tikz/CTC_Listener_plot_e10_loss}
-		\includegraphics[width=0.49\textwidth]{../tikz/CTC_Listener_plot_e10_error}
-		\caption{Listener with attached CTC.}
-	\end{figure}
 \end{frame}
 
 
@@ -199,8 +143,8 @@ AttentionContext computations:
 \begin{frame}{Alignment plots}
 	\begin{figure}
 	\centering
-	\includestandalone[width=0.49\linewidth]{../tikz/alpha}
-	\includestandalone[width=0.42\linewidth]{../tikz/align}
+	\includegraphics[width=0.49\linewidth]{../tikz/alpha}
+	\includegraphics[width=0.42\linewidth]{../tikz/align}
 	\caption{Plot of the alignment vectors computed by the network for all 45 labels assigned to timit utterance \texttt{fmld0\_sx295} (left), and alignments assigned by a human listener (right).}
 	\label{fig:fullAttention}
 	\end{figure}
@@ -219,9 +163,9 @@ AttentionContext computations:
 
 	\begin{figure}
 	\centering
-	\includestandalone[height=0.26\linewidth]{../tikz/alphaZoom}
-	\includestandalone[height=0.26\linewidth]{../tikz/alphaZoom2}
-	\includestandalone[height=0.26\linewidth]{../tikz/alphaZoom3}
+	\includegraphics[height=0.26\linewidth]{../tikz/alphaZoom}
+	\includegraphics[height=0.26\linewidth]{../tikz/alphaZoom2}
+	\includegraphics[height=0.26\linewidth]{../tikz/alphaZoom3}
 	\caption{Attention weights $\alpha$ and network output.}
 	\label{fig:attention3}
 	\end{figure}
