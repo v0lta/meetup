@@ -30,36 +30,36 @@
   \tableofcontents
 \end{frame}
 
-\section{Introduction}
-\begin{frame}{The problem}
+\section{Worum geht es?}
+\begin{frame}{Das Problem}
 	\begin{itemize}
-		\item What is being said?
-		\item How is the data aligned?
-		\item What model architecture?
-		\item What are good hyper-parameters?
-		\item How to ensure generalization?
+		\item Was wird gesagt?
+		\item Wie können Text und Ton zugeordnet werden?
+		\item Mit welcher Modell-Architektur?
+		\item Was sind gute optimierungs-Parameter?
+		\item Wie lässt sich gute Generalisierung sicherstellen?
 	\end{itemize}
 \end{frame}
 
-\begin{frame}{The LAS-Architecture}
+\begin{frame}{The LAS-Architektur}
 	\begin{figure}
 		\begin{tikzpicture}
 		    \node[anchor=south west,inner sep=0] at (0,0) {\includegraphics[height=6.5 cm]{../tikz/lasArcBottomUp}};
 		    %\draw[red,ultra thick,rounded corners] (0.0,0.0) rectangle (5.0,2.5);
 		\end{tikzpicture}
-		\caption{Listener and speller.}
+		\caption{Listener und speller.}
 	\end{figure}
 \end{frame}
 
-\begin{frame}{The LAS-Equations}
-Attend and spell cell computations:
+\begin{frame}{Die LAS-Gleichungen}
+Attend und spell Zell-Berechnungen:
 \begin{align}
 	 \mathbf{s}_i &= \text{RNN}(\mathbf{s}_{i-1}, \mathbf{y}_{i-1}, \mathbf{c}_{i-1}), \\
 	 \mathbf{c}_i &= \text{AttentionContext}(\mathbf{s}_i,\mathbf{H}), \\
 	  P(\mathbf{y}_i|\mathbf{x}, \mathbf{y}_{<i}) &= \text{CharacterDistribution}(\mathbf{s}_i,\textbf{c}_i).
 \end{align}
 
-AttentionContext computations:
+AttentionContext Berechnungen:
 \begin{align}
 	e_{i,u} = \phi(\mathbf{s}_i)^T \psi(\mathbf{h_u}), \\
 	\alpha_{i,u} = \frac{ \exp(e_{i,u})}{ \sum\limits_{u} \exp(e_{i,u})}, \\
@@ -68,50 +68,50 @@ AttentionContext computations:
 \end{align}
 \end{frame}
 
-\section{Implementation}
+\section{Implementierung}
 
 
 \begin{frame}[fragile]
-\frametitle{Major obstacles}
+\frametitle{Herausforderungen}
 \begin{itemize}
 
-\item Attend and spell cell
-\item Decoding loop logic
+\item Attend und spell Zelle
+\item Dekodier-Schliefen-Logik
 	\begin{itemize}
-	\item greedy decoding
+	\item Greedy decoding
+	\item Beam search
 		\begin{itemize}
-		\item works with multiple utterances
-		\end{itemize}
-	\item beam search
-		\begin{itemize}
-		\item multiple hypotheses
-		\item keeps track of hypotheses' probabilities, sequence elements, states, status (done?) and sequence lengths
+		\item Mehrere Hypothesen.
+		\item Betrachtet die individuelle Wahrscheinlichkeit einzelner
+			  Sequenz-Elemente, den Status und die Gesamtlänge.
 		\end{itemize}
 	\end{itemize}
-\item Efficiency
+\item Effizienz
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Attend and spell cell layout}
+\begin{frame}{Attend und spell Zell Layout}
 	\begin{figure}
 	\includegraphics[height=6.5 cm]{../tikz/asCellType1}
-	\caption{Attend and spell cell flow chart.}
+	\caption{Attend und spell Zell Flow-Chart.}
 	\end{figure}
 \end{frame}
 
-\begin{frame}{Efficency improvements}
+\begin{frame}{Effiziente Implementierung}
 	\begin{itemize}
-		\item Evaluate the feature net output outside the attend and spell cell.
-		\item Keep track of sequence lengths.
-		\item Zero padding makes it possible to work with fixed size tensors.
-		\item Sequence length information must be used to avoid processing the padding.
+		\item Evaluiere das feature Netz außerhalb der Attend und Spell
+			  Zelle.
+		\item Tensoren mit konstanter Größe für effizienter
+			  Speicherallokation.
+		\item Sequenzlängen beachten gerade auf dem Sprachsignal.
+		\item Sequenzlängen verwenden um keine Nullen zu verarbeiten.
 	\end{itemize}
 \end{frame}
 
 \begin{frame}{Dropout}
 	\begin{figure}
 		\includegraphics[height=6.5 cm]{../tikz/las_dropout}
-		\caption{Input dropout - light red. Hidden dropout - dark red.}
+		\caption{Input dropout - hellrot. Hidden dropout - dunkelrot.}
 	\end{figure}
 \end{frame}
 
@@ -121,37 +121,32 @@ AttentionContext computations:
 
 \begin{itemize}
 	\item TIMIT Speech corpus.
-	\item learning rate: 0.001.
-	\item batch\_size: 16 utterances, Training set total 3696.
-	\item validation set size: 4 utterances.
-	\item test set size: 192 utterances.
-	\item validation every 20 weight updates.
+	\item Schrittweite: 0.001.
+	\item batch\_größe: 16 Sätze, Im Trainings-Datensatz insgesamt 3696.
+	\item Validierungsdatensatzgröße: 4 Sätze.
+	\item Testdatensatzgröße: 192 Sätze.
+	\item Alle 20 schritte ein Validierunsschritt.
 \end{itemize}
 
 \end{frame}
 
-
-\begin{frame}{Greedy Decoding}
-	\begin{figure}
-	\includegraphics[width=0.49\linewidth]{../tikz/LAS_no_reg_e40_p07_loss}
-	\includegraphics[width=0.49\linewidth]{../tikz/LAS_no_reg_e40_p07_error}
-	\caption{The training progress shown for the full las architecture with greedy decoding, over 40 epochs, network output reuse probability 0.7 and input noise standard deviation 0.65.}
-	\label{fig:lasGreedy}
-	\end{figure}
-\end{frame}
-
-\begin{frame}{Alignment plots}
+\begin{frame}{Aufmerksamkeits plots}
 	\begin{figure}
 	\centering
-	\includegraphics[width=0.49\linewidth]{../tikz/alpha}
-	\includegraphics[width=0.42\linewidth]{../tikz/align}
-	\caption{Plot of the alignment vectors computed by the network for all 45 labels assigned to timit utterance \texttt{fmld0\_sx295} (left), and alignments assigned by a human listener (right).}
+	\includegraphics[width=0.2\linewidth, angle=90]{../tikz/align}
+	\end{figure}
+	\begin{figure}
+	\centering
+	\includegraphics[width=0.2\linewidth, angle=90]{../tikz/alpha}
+	\caption{Plot der Aufmerksamkeits Vektoren für alle 45 labels die dem
+	Timit sample \texttt{fmld0\_sx295} (unten), zugeordnet wurden und
+	Phonemdauer-Zuordnung eines Menschlichen Zuhörers (oben).}
 	\label{fig:fullAttention}
 	\end{figure}
 \end{frame}
 
-\begin{frame}{Alignment plots}
-	\begin{block}{Target labels}
+\begin{frame}{Aufmerksamkeits plots}
+	\begin{block}{Ziel labels}
 		\begin{semiverbatim}
 		<sos>  sil  ih  f  sil  k  eh  r  l  sil  k  ah  m  z
 		       sil  t  ah  m  aa  r  ah  hh  ae  v  er  r  ey
@@ -166,7 +161,7 @@ AttentionContext computations:
 	\includegraphics[height=0.26\linewidth]{../tikz/alphaZoom}
 	\includegraphics[height=0.26\linewidth]{../tikz/alphaZoom2}
 	\includegraphics[height=0.26\linewidth]{../tikz/alphaZoom3}
-	\caption{Attention weights $\alpha$ and network output.}
+	\caption{Aufmerksamkeits-Gewichte $\alpha$ und Netzwerk output.}
 	\label{fig:attention3}
 	\end{figure}
 \end{frame}
@@ -182,16 +177,17 @@ AttentionContext computations:
 	\includegraphics[width=0.24\linewidth]{../tikz/LAS_no_reg_e10_p06_error}
 	\includegraphics[width=0.24\linewidth]{../tikz/LAS_no_reg_e10_p08_loss}
 	\includegraphics[width=0.24\linewidth]{../tikz/LAS_no_reg_e10_p08_error}
-	\caption{Repetitions of the same experiment with increasing network output reuse probabilities $0.2, 0.4, 0.6, 0.8$, one experiment per row.}
+	\caption{Wiederholungen des selben Experimentes mit sich erhöhender
+	Rückkopplungs-Wahrscheinlichkeit in der LAS-Zelle $0.2, 0.4, 0.6, 0.8$}
 	\label{fig:lasGreedy2468}
 	\end{figure}
 \end{frame}
 
-\begin{frame}{Dropout las with beam search}
+\begin{frame}{Dropout las mit beam search}
 	\begin{figure}
 	\includegraphics[width=0.49\textwidth]{../tikz/LAS_dropout0805_in00_p06_e120_double_loss}
 	\includegraphics[width=0.49\textwidth]{../tikz/LAS_dropout0805_in00_p06_e120_double_error}
-	\caption{Dropout las results.}
+	\caption{Dropout las Ergebnisse.}
 	\end{figure}
 \end{frame}
 
@@ -211,20 +207,20 @@ Greedy-LAS   & $\sigma_i=.65$          & 64   & 2	                & 128   & 64  
 Big-Beam-LAS   & $p_i=.8$,$p_h=.6$     & 128  & 2	                & 256   & 128  & 1,2	    & .6         & 40     & 45\%   \\ \hline
 \end{tabular}
 }
-\caption{Selected important experiment parameters and test set phoneme error rate.}
+\caption{Ausgewählte Parameter und Fehler einiger interessanter Experimente.}
 \end{table}
 
 \end{frame}
 
 \begin{frame}{Conclusion}
 \begin{itemize}
-	\item Some success with a reimplemented LAS-architecture.
-	\item Independent validation of beam search and dropout code required.
-	\item Ways to improve:
+	\item Keine Erfolge mit re-implementierter LAS-Architektur.
+	\item Verbesserungsmöglichkeiten:
 		\begin{itemize}
-			\item tensorflow's default attention mechanism.
-			\item run larger networks.
-			\item try other optimization parameters (learning rate, decay, \dots)
+			\item Tensorflow hat mittlerweile einen eigene Aufmerksamkeits
+				  Funktionen. .
+			\item Mehr Gewichte.
+			\item Nutzung eines größeren Datensatzes.
 		\end{itemize}
 \end{itemize}
 \end{frame}
