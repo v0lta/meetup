@@ -9,6 +9,8 @@
 \usepackage{booktabs}
 \usepackage[scale=2]{ccicons}
 
+\usepackage[center]{caption}
+
 \usepackage{pgfplots}
 \usepgfplotslibrary{dateplot}
 
@@ -38,32 +40,33 @@
 	\begin{itemize}
 		\item eignen sich sehr gut zur Verarbeitung von Daten, die eine Sequenz darstellen.
 		\item Anwendungsbereiche\begin{itemize}
-			\item Sprachverarbeitung
-			\item Audioverarbeitung
+			\item Sprachverarbeitung %Ton menschlicher Sprache
+			\item Audioverarbeitung % nur Ton bzw. Musik
 			\item Videoverarbeitung
-			\item Sprachmodellierung
+			\item Sprachmodellierung %t ext
 		\end{itemize}
 		%HIER DEMO Sprachmodellierung
 	\end{itemize}
 \end{frame}
 
-\begin{frame}{Der Anfang}
+\begin{frame}{Phase Eins}
 	\begin{figure}
 		\includegraphics[scale=1]{../bilder_intro/recurrent_cell.pdf}
-		\caption{Einfache rückgekoppelte Zelle.}
+		\caption*{Einfache rückgekoppelte Zelle}
 		% kleinBuchstaben = Vektoren, großBuchstaben: Matrizen
-		% vanishing gradient problem
 		% simple rückgekoppelte neuronale Netze funktionieren deswegen nicht
 		% Buchstabe x kommt rein
 		% verbinde input und speicher Vektor
 		% kombiniere Vektoren durch Matrizen-Multiplikation
-		% aktualisiere den Speicher mit neuem Vektor aus Multiplikation (Speicher für nächsten Zeitschritt)
-		% y ist die Wahrscheinlichkeitsverteilung von Buchstaben unseres Outputs
+		% hyperbolischer Tangens skaliert die Vektoren (Werte zwischen 0 und 1)
+		% aktualisiere den Speicher mit neuem Vektor aus Neuron (Speicher für nächsten Zeitschritt)
+		% y ist die Wahrscheinlichkeitswerte von Buchstaben unseres Outputs
 	\end{figure}
 \end{frame}
 
 \begin{frame}{Probleme}
 	\begin{itemize}
+		\item es wird alles gespeichert und nichts vergessen
 		\item verschwindender Gradient % unbesiegbar?
 		\item explodierender Gradient % clipping Funktion, um große Zahlen "abzurasieren"
 	\end{itemize}
@@ -72,30 +75,42 @@
 \begin{frame}{Lösung}
 	\begin{figure}
 		\includegraphics[scale=0.5]{../bilder_intro/nop_lstm.pdf}
-		\caption{Schematische Darstellung einer Long Short Term Memory Zelle.}
+		\caption*{Schematische Darstellung einer Long Short Term Memory Zelle}
 		% s (speicherlinie) ist ein Log vorhergegangener Operationen
 		% h vorheriger Output und x neuer Input kommen rein, werden kombiniert
+		% f beinhaltet was ich vergessen möchte
 		% i beinhaltet was ich speichern möchte (Input Gate Ausgang) 1 = speichern, 0 = nicht speichern
-		
+		% o beinhaltet was raus darf
+		% f, i und o sind Ausgangswerte einer sigmoiden Funktion (Werte zwischen 0 und 1)
+		% die sigmiod Funktionen ergeben eine Zahl zwischen 0 und 1, welche bestimmt wie viel vom Vektor "passieren" darf
+		% hyperbolische Tangens sind die echten Daten (-1 bis 1) und Sigmoide Funktionen sind Tore
 	\end{figure}
 \end{frame}
 
 \begin{frame}{Problem}
 	\begin{itemize}
-		\item Wir bestimmen, was vergessen werden soll, ohne den Inhalt des Speichers zu kennen.
+		\item Wir bestimmen, was vergessen, gespeichert und ausgegeben werden soll, ohne den Inhalt des Speichers zu kennen.
 	\end{itemize}
 \end{frame}
 
 \begin{frame}{Lösung}
 	\begin{figure}
 		\includegraphics[scale=0.5]{../bilder_intro/lstm.pdf}
-		\caption{Schematische Darstellung einer Long Short Term Memory Zelle mit Kucklöchern.}
+		\caption*{Schematische Darstellung einer Long Short Term Memory Zelle\\mit Kucklöchern}
+		% empirische Beobachtungen belegen, dass LSTMs mit Kucklöchern bessere Ergebnisse erzielen
 	\end{figure}
 \end{frame}
 
 \begin{frame}{Zusammenfassung}
 	\begin{itemize}
 		\item tbd
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Leichte Literatur}
+	\begin{itemize}
+		\item \href{http://colah.github.io/posts/2015-08-Understanding-LSTMs/}{http://colah.github.io/posts/2015-08-Understanding-LSTMs/}
+		\item \href{http://karpathy.github.io/2015/05/21/rnn-effectiveness/}{http://karpathy.github.io/2015/05/21/rnn-effectiveness/}
 	\end{itemize}
 \end{frame}
 
