@@ -36,7 +36,7 @@
 
 \begin{frame}{Warum rückgekoppelte neuronale Netze?}
 	\begin{itemize}
-		\item eignet sich sehr gut zur Verarbeitung von Daten, die eine Sequenz darstellen
+		\item eignen sich sehr gut zur Verarbeitung von Daten, die eine Sequenz darstellen.
 		\item Anwendungsbereiche\begin{itemize}
 			\item Sprachverarbeitung
 			\item Audioverarbeitung
@@ -47,19 +47,25 @@
 	\end{itemize}
 \end{frame}
 
-\begin{frame}{Rückgekoppelte Netze}
+\begin{frame}{Der Anfang}
 	\begin{figure}
 		\includegraphics[scale=1]{../bilder_intro/recurrent_cell.pdf}
 		\caption{Einfache rückgekoppelte Zelle.}
-		%vanishing gradient problem
-		%simple rückgekoppelte neuronale Netze funktionieren deswegen nicht
+		% kleinBuchstaben = Vektoren, großBuchstaben: Matrizen
+		% vanishing gradient problem
+		% simple rückgekoppelte neuronale Netze funktionieren deswegen nicht
+		% Buchstabe x kommt rein
+		% verbinde input und speicher Vektor
+		% kombiniere Vektoren durch Matrizen-Multiplikation
+		% aktualisiere den Speicher mit neuem Vektor aus Multiplikation (Speicher für nächsten Zeitschritt)
+		% y ist die Wahrscheinlichkeitsverteilung von Buchstaben unseres Outputs
 	\end{figure}
 \end{frame}
 
 \begin{frame}{Probleme}
 	\begin{itemize}
 		\item verschwindender Gradient % unbesiegbar?
-		\item explodierender Gradient % clipping Funktion, um große Zahlen abzurasieren
+		\item explodierender Gradient % clipping Funktion, um große Zahlen "abzurasieren"
 	\end{itemize}
 \end{frame}
 
@@ -67,6 +73,10 @@
 	\begin{figure}
 		\includegraphics[scale=0.5]{../bilder_intro/nop_lstm.pdf}
 		\caption{Schematische Darstellung einer Long Short Term Memory Zelle.}
+		% s (speicherlinie) ist ein Log vorhergegangener Operationen
+		% h vorheriger Output und x neuer Input kommen rein, werden kombiniert
+		% i beinhaltet was ich speichern möchte (Input Gate Ausgang) 1 = speichern, 0 = nicht speichern
+		
 	\end{figure}
 \end{frame}
 
