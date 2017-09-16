@@ -9,14 +9,14 @@
 \usepackage[mode=buildnew]{standalone}% requires -shell-escape
 \usepackage{amsmath}
 
-\usepackage[english]{babel}
+\usepackage[ngerman]{babel}
 \usepackage[utf8x]{inputenc}
 \setbeamertemplate{footline}[frame number]
 
-\title{Building an end-to-end speech recognizer}
+\title{Ende zu Ende Spracherkennung}
 \author{Moritz Wolter}
 
-\date{01.02.2017}
+\date{21.09.2017}
 
 
 \begin{document}
@@ -25,8 +25,10 @@
 \end{frame}
 
 
+
+
 % Uncomment these lines for an automatically generated outline.
-\begin{frame}{Outline}
+\begin{frame}{Inhalt}
   \tableofcontents
 \end{frame}
 
@@ -36,12 +38,20 @@
 		\item Was wird gesagt?
 		\item Wie können Text und Ton zugeordnet werden?
 		\item Mit welcher Modell-Architektur?
-		\item Was sind gute optimierungs-Parameter?
+		\item Was sind gute Optimierungsparameter?
 		\item Wie lässt sich gute Generalisierung sicherstellen?
 	\end{itemize}
 \end{frame}
 
-\begin{frame}{The LAS-Architektur}
+\begin{frame}{ConvLSTM}
+\begin{figure}
+\includegraphics[scale=0.55]{../tikz/convLSTM}
+\caption{Faltungs-LSTM Zelle.}
+\end{figure}
+\end{frame}
+
+
+\begin{frame}{Die LAS-Architektur}
 	\begin{figure}
 		\begin{tikzpicture}
 		    \node[anchor=south west,inner sep=0] at (0,0) {\includegraphics[height=6.5 cm]{../tikz/lasArcBottomUp}};
@@ -76,7 +86,7 @@ AttentionContext Berechnungen:
 \begin{itemize}
 
 \item Attend und spell Zelle
-\item Dekodier-Schliefen-Logik
+\item Dekodier-Schleifen-Logik
 	\begin{itemize}
 	\item Greedy decoding
 	\item Beam search
@@ -90,10 +100,10 @@ AttentionContext Berechnungen:
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Attend und spell Zell Layout}
+\begin{frame}{Attend und spell Zellenlayout}
 	\begin{figure}
 	\includegraphics[height=6.5 cm]{../tikz/asCellType1}
-	\caption{Attend und spell Zell Flow-Chart.}
+	\caption{Attend und spell Zellen-Flow-Chart.}
 	\end{figure}
 \end{frame}
 
@@ -115,12 +125,12 @@ AttentionContext Berechnungen:
 	\end{figure}
 \end{frame}
 
-\section{Results}
+\section{Ergebnisse}
 
-\begin{frame}{Experimental settings}
+\begin{frame}{Experimentalparameter}
 
 \begin{itemize}
-	\item TIMIT Speech corpus.
+	\item TIMIT Sprachkorpus.
 	\item Schrittweite: 0.001.
 	\item batch\_größe: 16 Sätze, Im Trainings-Datensatz insgesamt 3696.
 	\item Validierungsdatensatzgröße: 4 Sätze.
@@ -130,7 +140,7 @@ AttentionContext Berechnungen:
 
 \end{frame}
 
-\begin{frame}{Aufmerksamkeits plots}
+\begin{frame}{Aufmerksamkeitsplots}
 	\begin{figure}
 	\centering
 	\includegraphics[width=0.2\linewidth, angle=90]{../tikz/align}
@@ -138,14 +148,14 @@ AttentionContext Berechnungen:
 	\begin{figure}
 	\centering
 	\includegraphics[width=0.2\linewidth, angle=90]{../tikz/alpha}
-	\caption{Plot der Aufmerksamkeits Vektoren für alle 45 labels die dem
-	Timit sample \texttt{fmld0\_sx295} (unten), zugeordnet wurden und
-	Phonemdauer-Zuordnung eines Menschlichen Zuhörers (oben).}
+	\caption{Plot der Aufmerksamkeitsvektoren für alle 45 Phoneme, die dem
+	Timit sample \texttt{fmld0\_sx295} (unten) zugeordnet wurden und
+	Phonemdauer-Zuordnung eines menschlichen Zuhörers (oben).}
 	\label{fig:fullAttention}
 	\end{figure}
 \end{frame}
 
-\begin{frame}{Aufmerksamkeits plots}
+\begin{frame}{Aufmerksamkeitsplots}
 	\begin{block}{Ziel labels}
 		\begin{semiverbatim}
 		<sos>  sil  ih  f  sil  k  eh  r  l  sil  k  ah  m  z
@@ -161,38 +171,41 @@ AttentionContext Berechnungen:
 	\includegraphics[height=0.26\linewidth]{../tikz/alphaZoom}
 	\includegraphics[height=0.26\linewidth]{../tikz/alphaZoom2}
 	\includegraphics[height=0.26\linewidth]{../tikz/alphaZoom3}
-	\caption{Aufmerksamkeits-Gewichte $\alpha$ und Netzwerk output.}
+	\caption{Aufmerksamkeitsgewichte $\alpha$ und Netzwerk output.}
 	\label{fig:attention3}
 	\end{figure}
 \end{frame}
 
-\begin{frame}
+\begin{frame}{Rückkopplungswahrscheinlichkeit}
 	\begin{figure}
 	\centering
-	\includegraphics[width=0.24\linewidth]{../tikz/LAS_no_reg_e10_p02_loss}
-	\includegraphics[width=0.24\linewidth]{../tikz/LAS_no_reg_e10_p02_error}
-	\includegraphics[width=0.24\linewidth]{../tikz/LAS_no_reg_e10_p04_loss}
-	\includegraphics[width=0.24\linewidth]{../tikz/LAS_no_reg_e10_p04_error}
-	\includegraphics[width=0.24\linewidth]{../tikz/LAS_no_reg_e10_p06_loss}
-	\includegraphics[width=0.24\linewidth]{../tikz/LAS_no_reg_e10_p06_error}
-	\includegraphics[width=0.24\linewidth]{../tikz/LAS_no_reg_e10_p08_loss}
-	\includegraphics[width=0.24\linewidth]{../tikz/LAS_no_reg_e10_p08_error}
+	\includegraphics[width=0.2\linewidth]{../tikz/LAS_no_reg_e10_p02_loss}
+	\includegraphics[width=0.2\linewidth]{../tikz/LAS_no_reg_e10_p02_error}
+	\includegraphics[width=0.2\linewidth]{../tikz/LAS_no_reg_e10_p04_loss}
+	\includegraphics[width=0.2\linewidth]{../tikz/LAS_no_reg_e10_p04_error}
+	\end{figure}
+	\begin{figure}
+	\centering
+	\includegraphics[width=0.2\linewidth]{../tikz/LAS_no_reg_e10_p06_loss}
+	\includegraphics[width=0.2\linewidth]{../tikz/LAS_no_reg_e10_p06_error}
+	\includegraphics[width=0.2\linewidth]{../tikz/LAS_no_reg_e10_p08_loss}
+	\includegraphics[width=0.2\linewidth]{../tikz/LAS_no_reg_e10_p08_error}
 	\caption{Wiederholungen des selben Experimentes mit sich erhöhender
 	Rückkopplungs-Wahrscheinlichkeit in der LAS-Zelle $0.2, 0.4, 0.6, 0.8$}
 	\label{fig:lasGreedy2468}
 	\end{figure}
 \end{frame}
 
-\begin{frame}{Dropout las mit beam search}
+\begin{frame}{Dropout-LAS mit beam search}
 	\begin{figure}
 	\includegraphics[width=0.49\textwidth]{../tikz/LAS_dropout0805_in00_p06_e120_double_loss}
 	\includegraphics[width=0.49\textwidth]{../tikz/LAS_dropout0805_in00_p06_e120_double_error}
-	\caption{Dropout las Ergebnisse.}
+	\caption{Dropout-LAS Ergebnisse.}
 	\end{figure}
 \end{frame}
 
-\section{Conclusion}
-\begin{frame}{Conclusion}
+\section{Zusammenfassung}
+\begin{frame}{Zusammenfassung}
 
 \begin{table}
 \adjustbox{max height=\dimexpr\textheight-5.5cm\relax,
@@ -212,24 +225,25 @@ Big-Beam-LAS   & $p_i=.8$,$p_h=.6$     & 128  & 2	                & 256   & 128 
 
 \end{frame}
 
-\begin{frame}{Conclusion}
+\begin{frame}{Zusammenfassung}
 \begin{itemize}
-	\item Keine Erfolge mit re-implementierter LAS-Architektur.
+	\item Kleine Erfolge mit re-implementierter LAS-Architektur.
 	\item Verbesserungsmöglichkeiten:
 		\begin{itemize}
-			\item Tensorflow hat mittlerweile einen eigene Aufmerksamkeits
-				  Funktionen. .
+			\item Tensorflow hat mittlerweile eine eigene Aufmerksamkeits
+				  Funktionen.
 			\item Mehr Gewichte.
-			\item Nutzung eines größeren Datensatzes.
+			\item Nutzung eines größeren Datensatzes (TIMIT sind nur 700 MB!).
 		\end{itemize}
 \end{itemize}
 \end{frame}
 
 
-\section{Questions}
-\begin{frame}{Questions}
-	Thank's for your attention. Questions? \\
-	Now, or later \texttt{moritz@wolter.tech}.
+\section{Diskussion}
+\begin{frame}{Diskussion}
+	Vielen dank für eure Aufmerksamkeit. Fragen? \\
+	Jetzt oder später \texttt{moritz@wolter.tech}. \\
+	\url{https://github.com/v0lta/Listen-attend-and-spell}
 \end{frame}
 
 
